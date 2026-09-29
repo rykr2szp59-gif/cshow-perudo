@@ -1,8 +1,8 @@
 {
-  "name": "cshow-perudo-v1",
-  "version": "1.0.0",
+  "name": "cshow-perudo-v2",
+  "version": "2.0.0",
   "private": true,
-  "description": "Perudo multijoueur temps r\u00e9el pour C-Show",
+  "description": "Perudo multijoueur C-Show - r\u00e8gles personnalis\u00e9es",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

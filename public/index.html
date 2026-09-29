@@ -1,94 +1,117 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#121212" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0d0d">
   <title>C-Show Perudo</title>
-  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <main class="app">
-    <section id="welcome" class="card">
-      <h1>🎲 C‑SHOW PERUDO</h1>
-      <p class="muted">Le jeu de dés multijoueur en direct.</p>
-      <label>Ton prénom</label>
-      <input id="name" maxlength="24" placeholder="Cyril" />
-      <button id="create" class="primary">Créer une partie</button>
-      <div class="sep"><span>ou</span></div>
-      <label>Code de partie</label>
-      <input id="code" maxlength="4" placeholder="AB12" autocapitalize="characters" />
-      <button id="join">Rejoindre</button>
-      <p id="welcomeError" class="error"></p>
+<main class="app">
+  <section id="welcome" class="card">
+    <h1>🎲 C‑SHOW PERUDO</h1>
+    <p class="muted">Jeu de dés multijoueur en direct.</p>
+
+    <label>Ton prénom</label>
+    <input id="name" maxlength="24" placeholder="Cyril">
+
+    <button id="create" class="primary">Créer une partie</button>
+
+    <div class="sep"><span>ou</span></div>
+
+    <label>Code de partie</label>
+    <input id="code" maxlength="4" placeholder="AB12" autocapitalize="characters">
+    <button id="join">Rejoindre</button>
+
+    <p id="welcomeError" class="error"></p>
+  </section>
+
+  <section id="lobby" class="card hidden">
+    <div class="roomHeader">
+      <div>
+        <div class="muted small">CODE PARTIE</div>
+        <div id="roomCode" class="roomCode"></div>
+      </div>
+      <div id="hostBadge" class="badge hidden">HÔTE</div>
+    </div>
+
+    <h2>Joueurs</h2>
+    <div id="lobbyPlayers" class="players"></div>
+
+    <button id="start" class="primary hidden">Démarrer la partie</button>
+    <p class="muted small">2 à 12 joueurs · 5 dés par joueur</p>
+    <p id="lobbyError" class="error"></p>
+  </section>
+
+  <section id="game" class="hidden">
+    <div class="topbar">
+      <div><span class="muted small">PARTIE</span><br><strong id="gameCode"></strong></div>
+      <div><span class="muted small">MANCHE</span><br><strong id="round"></strong></div>
+      <div><span class="muted small">TEMPS</span><br><strong id="timer">20</strong>s</div>
+    </div>
+
+    <section id="resolution" class="card hidden"></section>
+
+    <section class="card">
+      <div id="turnBanner" class="turnBanner">En attente…</div>
+      <div class="muted small">TES DÉS</div>
+      <div id="myDice" class="diceRow"></div>
+      <div class="legend">🦜 = PERUDO / TOUCAN</div>
     </section>
 
-    <section id="lobby" class="card hidden">
-      <div class="roomHeader">
+    <section class="card">
+      <div class="muted small">DERNIÈRE ANNONCE</div>
+      <div id="currentBid" class="bigBid">Aucune</div>
+
+      <div class="grid2">
         <div>
-          <div class="muted small">CODE PARTIE</div>
-          <div id="roomCode" class="roomCode"></div>
+          <label>Nombre de dés</label>
+          <input id="quantity" type="number" min="1" value="1">
         </div>
-        <div id="hostBadge" class="badge hidden">HÔTE</div>
+        <div>
+          <label>Valeur</label>
+          <select id="value">
+            <option value="1">⚀ 1</option>
+            <option value="2">⚁ 2</option>
+            <option value="3">⚂ 3</option>
+            <option value="4">⚃ 4</option>
+            <option value="5">⚄ 5</option>
+            <option value="6">🦜 PERUDO</option>
+          </select>
+        </div>
       </div>
+
+      <button id="prepareBid" class="primary">VALIDER MON ANNONCE</button>
+
+      <div class="grid2 actions">
+        <button id="lie" class="danger">TU MENS</button>
+        <button id="exact" class="gold">EXACT</button>
+      </div>
+
+      <p id="ruleHint" class="muted small"></p>
+      <p id="gameError" class="error"></p>
+    </section>
+
+    <section class="card">
       <h2>Joueurs</h2>
-      <div id="lobbyPlayers" class="players"></div>
-      <button id="start" class="primary hidden">Démarrer la partie</button>
-      <p class="muted small">2 à 12 joueurs · 5 dés par joueur</p>
-      <p id="lobbyError" class="error"></p>
+      <div id="gamePlayers" class="players"></div>
     </section>
 
-    <section id="game" class="hidden">
-      <div class="topbar">
-        <div><span class="muted small">PARTIE</span><br><strong id="gameCode"></strong></div>
-        <div><span class="muted small">MANCHE</span><br><strong id="round"></strong></div>
-      </div>
+    <button id="restart" class="hidden">Rejouer</button>
+  </section>
+</main>
 
-      <section id="resolution" class="card hidden"></section>
+<div id="confirmModal" class="modal hidden">
+  <div class="modalCard">
+    <h2>Confirmer l’annonce</h2>
+    <p id="confirmText"></p>
+    <button id="confirmBid" class="primary">CONFIRMER</button>
+    <button id="cancelBid">ANNULER</button>
+  </div>
+</div>
 
-      <section class="card">
-        <div id="turnBanner" class="turnBanner">En attente…</div>
-        <div class="muted small">TES DÉS</div>
-        <div id="myDice" class="diceRow"></div>
-      </section>
-
-      <section class="card">
-        <div class="muted small">DERNIÈRE ENCHÈRE</div>
-        <div id="currentBid" class="bigBid">Aucune</div>
-
-        <div id="bidControls">
-          <div class="grid2">
-            <div>
-              <label>Quantité</label>
-              <input id="quantity" type="number" min="1" value="1" />
-            </div>
-            <div>
-              <label>Valeur du dé</label>
-              <select id="value">
-                <option value="1">⚀ 1</option>
-                <option value="2">⚁ 2</option>
-                <option value="3">⚂ 3</option>
-                <option value="4">⚃ 4</option>
-                <option value="5">⚄ 5</option>
-                <option value="6">⚅ 6</option>
-              </select>
-            </div>
-          </div>
-          <button id="bid" class="primary">ENCHÉRIR</button>
-          <button id="dudo" class="danger">DUDO !</button>
-          <p id="gameError" class="error"></p>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Joueurs</h2>
-        <div id="gamePlayers" class="players"></div>
-      </section>
-
-      <button id="restart" class="hidden">Rejouer</button>
-    </section>
-  </main>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/app.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/app.js"></script>
 </body>
 </html>

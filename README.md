@@ -1,45 +1,37 @@
 
-# C-Show Perudo — V1
+# C-Show Perudo V2
 
-Version multijoueur temps réel, pensée pour téléphone.
+## Règles intégrées
+- Chaque joueur commence avec 5 dés.
+- Le 6 est remplacé visuellement par un Toucan / Perudo.
+- Une première annonce doit porter sur une valeur normale (1 à 5).
+- Une annonce normale = quantité + valeur.
+- Les Perudo sont jokers pour les annonces normales.
+- Une annonce de Perudo ne compte que les Perudo.
+- Passage normal -> Perudo : moitié entière + 1.
+  Exemple : 6 dés de 4 -> minimum 4 Perudo.
+- Passage Perudo -> normal : double + 1.
+  Exemple : 4 Perudo -> minimum 9 dés d'une valeur normale.
+- "TU MENS" :
+  - si l'annonce était fausse, l'annonceur perd 1 dé ;
+  - si l'annonce était vraie, celui qui a dit "TU MENS" perd 1 dé.
+- "EXACT" :
+  - si le compte est exactement égal à l'annonce, le joueur gagne 1 dé ;
+  - sinon il perd 1 dé ;
+  - maximum : 5 dés.
+- Chrono : 20 secondes par joueur.
+- Si le chrono arrive à zéro, le joueur perd 1 dé.
+- Validation de l'annonce avec confirmation sur téléphone.
+- Le dernier joueur encore en jeu gagne.
 
-## Ce qui fonctionne
-- Création d'une partie avec code 4 caractères
-- 2 à 12 joueurs
-- 5 dés privés par joueur
-- Tours automatiques
-- Enchères
-- DUDO
-- Les 1 sont jokers pour les enchères 2 à 6
-- Pour une enchère sur les 1, seuls les 1 comptent
-- Révélation des dés après DUDO
-- Perte d'un dé
-- Élimination
-- Victoire du dernier joueur
-- Rejouer une partie
-- Interface mobile
-
-## Important
-Cette V1 utilise une règle d'enchère simplifiée :
-- quantité supérieure, OU
-- même quantité avec une valeur supérieure.
-
-Les règles avancées Perudo (Palifico, changement spécifique vers/depuis les Pacos, Calza) seront à ajouter en V2.
-
-## Lancer sur Mac
-Ouvre Terminal puis :
-
+## Lancer
 ```bash
-cd ~/Desktop/cshow-perudo-v1
 npm install
 npm start
 ```
 
-Puis ouvre :
+Puis :
 http://localhost:3000
 
-Pour tester avec plusieurs appareils sur le même Wi-Fi, utilise l'adresse IP locale du Mac :
-http://ADRESSE-IP-DU-MAC:3000
-
-## Pour Wix / jeu à distance
-Il faudra héberger le serveur Node.js sur un hébergeur compatible WebSocket (Render, Railway, Fly.io, VPS, etc.), puis intégrer l'URL dans Wix avec un bouton ou une iframe.
+## Déploiement
+Le projet est prêt pour Render avec render.yaml.
