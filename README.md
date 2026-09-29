@@ -22,6 +22,8 @@
 - Chrono : 20 secondes par joueur.
 - Si le chrono arrive à zéro, le joueur perd 1 dé.
 - Validation de l'annonce avec confirmation sur téléphone.
+- Reconnexion automatique après une coupure ou un rechargement de page.
+- Les dés restent privés : seul leur propriétaire les reçoit avant la révélation.
 - Le dernier joueur encore en jeu gagne.
 
 ## Lancer
@@ -35,3 +37,19 @@ http://localhost:3000
 
 ## Déploiement
 Le projet est prêt pour Render avec render.yaml.
+
+## Tests
+
+```bash
+npm test
+```
+
+Les tests couvrent les changements d'annonce, un parcours à deux joueurs,
+la confidentialité des dés et la reconnexion.
+
+## Intégration Wix
+
+Après déploiement, ajouter sur la page `/perudo` un élément **Intégrer un site**
+pointant vers l'URL HTTPS Render. Donner à l'élément toute la largeur disponible
+et une hauteur minimale de 900 px sur mobile. L'URL Render doit rester l'adresse
+réelle du jeu afin que Socket.IO conserve sa connexion WebSocket.

@@ -2,5 +2,6 @@ services:
   - type: web
     name: cshow-perudo
     runtime: node
-    buildCommand: npm install
+    buildCommand: npm ci
     startCommand: npm start
+    healthCheckPath: /health

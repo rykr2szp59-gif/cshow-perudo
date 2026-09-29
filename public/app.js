@@ -6,7 +6,33 @@ let state = null;
 let myId = null;
 let pendingBid = null;
 
-socket.on("connect", () => { myId = socket.id; });
+function saveSession(session) {
+  localStorage.setItem("cshow-perudo-session", JSON.stringify(session));
+}
+
+function readSession() {
+  try { return JSON.parse(localStorage.getItem("cshow-perudo-session")); }
+  catch { return null; }
+}
+
+function acceptSession(res) {
+  if (!res?.ok) return false;
+  myId = res.playerId;
+  saveSession({ code: res.code, playerId: res.playerId, resumeToken: res.resumeToken });
+  return true;
+}
+
+socket.on("connect", () => {
+  const session = readSession();
+  if (!session?.code || !session?.playerId || !session?.resumeToken) return;
+  socket.emit("resumeRoom", session, res => {
+    if (acceptSession(res)) return;
+    localStorage.removeItem("cshow-perudo-session");
+    state = null;
+    myId = null;
+    $("welcome").classList.remove("hidden");
+  });
+});
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, c => ({
@@ -32,14 +58,14 @@ function playerName(id) {
 $("create").onclick = () => {
   $("welcomeError").textContent = "";
   socket.emit("createRoom", { name:$("name").value }, res => {
-    if (!res?.ok) $("welcomeError").textContent = res?.error || "Erreur.";
+    if (!acceptSession(res)) $("welcomeError").textContent = res?.error || "Erreur.";
   });
 };
 
 $("join").onclick = () => {
   $("welcomeError").textContent = "";
   socket.emit("joinRoom", { name:$("name").value, code:$("code").value }, res => {
-    if (!res?.ok) $("welcomeError").textContent = res?.error || "Erreur.";
+    if (!acceptSession(res)) $("welcomeError").textContent = res?.error || "Erreur.";
   });
 };
 
@@ -104,6 +130,7 @@ $("restart").onclick = () => {
 
 socket.on("state", s => {
   state = s;
+  myId = s.myId;
   render();
 });
 
@@ -192,7 +219,7 @@ function render() {
     $("lobbyPlayers").innerHTML = state.players.map(p => `
       <div class="player">
         <strong>${esc(p.name)}</strong>
-        <span>${p.id === state.hostId ? "Hôte" : ""}</span>
+        <span>${p.id === state.hostId ? "Hôte" : ""}${p.connected ? "" : " · hors ligne"}</span>
       </div>
     `).join("");
 
@@ -241,7 +268,7 @@ function render() {
     return `
       <div class="${cls}">
         <strong>${esc(p.name)}</strong>
-        <span>${p.alive ? `${p.diceCount} dé${p.diceCount > 1 ? "s" : ""}` : "Éliminé"}</span>
+        <span>${p.alive ? `${p.diceCount} dé${p.diceCount > 1 ? "s" : ""}` : "Éliminé"}${p.connected ? "" : " · hors ligne"}</span>
       </div>
     `;
   }).join("");
